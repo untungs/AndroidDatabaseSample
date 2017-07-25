@@ -1,5 +1,7 @@
 package com.example.databasesample;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -14,9 +16,16 @@ import android.view.MenuItem;
 import com.example.databasesample.model.Grocery;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import nl.qbusict.cupboard.QueryResultIterable;
+
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
+
 public class MainActivity extends AppCompatActivity {
+
+    private GroceryListAdapter groceryListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,19 +42,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        GroceryListAdapter groceryListAdapter = new GroceryListAdapter(getDummyData());
+        groceryListAdapter = new GroceryListAdapter(Collections.<Grocery>emptyList());
 
         RecyclerView recyclerGrocery = (RecyclerView) findViewById(R.id.recycler_grocery);
         recyclerGrocery.setLayoutManager(new LinearLayoutManager(this));
         recyclerGrocery.setAdapter(groceryListAdapter);
     }
 
-    private List<Grocery> getDummyData() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showData();
+    }
+
+    private void showData() {
+        SQLiteDatabase db = ((MyApp) getApplication()).getDb();
+        Cursor groceries = cupboard().withDatabase(db).query(Grocery.class).getCursor();
         List<Grocery> data = new ArrayList<>();
-        data.add(new Grocery("Sabun", 1, "biji", false));
-        data.add(new Grocery("Sampo", 3, "sachet", false));
-        data.add(new Grocery("Pasta Gigi", 2, "biji", true));
-        return data;
+        try {
+            QueryResultIterable<Grocery> itr = cupboard().withCursor(groceries).iterate(Grocery.class);
+            data.addAll(itr.list());
+        } finally {
+            groceries.close();
+        }
+        groceryListAdapter.setGroceries(data);
     }
 
     private void showAddGroceryDialog() {

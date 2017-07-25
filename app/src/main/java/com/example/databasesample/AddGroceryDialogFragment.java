@@ -1,10 +1,12 @@
 package com.example.databasesample;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,6 +17,10 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+
+import com.example.databasesample.model.Grocery;
+
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 
 public class AddGroceryDialogFragment extends DialogFragment {
@@ -46,6 +52,14 @@ public class AddGroceryDialogFragment extends DialogFragment {
                 R.array.unit, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinnerUnit.setAdapter(adapter);
+
+        buttonAddItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addGrocery();
+                dismiss();
+            }
+        });
     }
 
     @Override
@@ -61,5 +75,15 @@ public class AddGroceryDialogFragment extends DialogFragment {
         window.setGravity(Gravity.CENTER);
         // Call super onResume after sizing
         super.onResume();
+    }
+
+    void addGrocery() {
+        String itemName = inputItemName.getText().toString();
+        int amount = Integer.parseInt(inputAmount.getText().toString());
+        String unit = spinnerUnit.getSelectedItem().toString();
+
+        SQLiteDatabase db = ((MyApp) getActivity().getApplication()).getDb();
+        long id = cupboard().withDatabase(db).put(new Grocery(itemName, amount, unit, false));
+        Log.d("DBTEST", String.valueOf(id));
     }
 }

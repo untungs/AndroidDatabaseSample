@@ -20,6 +20,11 @@ public class GroceryListAdapter extends RecyclerView.Adapter<GroceryListAdapter.
         this.groceries = groceries;
     }
 
+    public void setGroceries(List<Grocery> groceries) {
+        this.groceries = groceries;
+        notifyDataSetChanged();
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grocery, parent, false);
