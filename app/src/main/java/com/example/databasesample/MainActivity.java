@@ -23,7 +23,7 @@ import nl.qbusict.cupboard.QueryResultIterable;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AddGroceryDialogFragment.OnDialogDismissListener {
 
     private GroceryListAdapter groceryListAdapter;
 
@@ -47,11 +47,12 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerGrocery = (RecyclerView) findViewById(R.id.recycler_grocery);
         recyclerGrocery.setLayoutManager(new LinearLayoutManager(this));
         recyclerGrocery.setAdapter(groceryListAdapter);
+
+        showData();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    public void onDialogDismiss() {
         showData();
     }
 

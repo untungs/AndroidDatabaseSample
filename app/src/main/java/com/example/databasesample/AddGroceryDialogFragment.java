@@ -1,5 +1,6 @@
 package com.example.databasesample;
 
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -29,7 +30,19 @@ public class AddGroceryDialogFragment extends DialogFragment {
     private Spinner spinnerUnit;
     private Button buttonAddItem;
 
+    private OnDialogDismissListener dialogDismissListener;
+
     public AddGroceryDialogFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (!(getActivity() instanceof OnDialogDismissListener)) {
+            throw new IllegalStateException(getActivity().getClass().getSimpleName()
+                    + " must implement " + OnDialogDismissListener.class.getSimpleName());
+        }
+        dialogDismissListener = (OnDialogDismissListener) getActivity();
     }
 
     @Nullable
@@ -77,6 +90,12 @@ public class AddGroceryDialogFragment extends DialogFragment {
         super.onResume();
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        dialogDismissListener.onDialogDismiss();
+    }
+
     void addGrocery() {
         String itemName = inputItemName.getText().toString();
         int amount = Integer.parseInt(inputAmount.getText().toString());
@@ -85,5 +104,9 @@ public class AddGroceryDialogFragment extends DialogFragment {
         SQLiteDatabase db = ((MyApp) getActivity().getApplication()).getDb();
         long id = cupboard().withDatabase(db).put(new Grocery(itemName, amount, unit, false));
         Log.d("DBTEST", String.valueOf(id));
+    }
+
+    public interface OnDialogDismissListener {
+        void onDialogDismiss();
     }
 }
