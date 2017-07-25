@@ -4,4 +4,6 @@
     <string name="item_name">Item Name</string>
     <string name="amount">Amount</string>
     <string name="add">Add</string>
+    <string name="empty_list">Empty List</string>
+    <string name="hint_add_item">Grocery list is empty.\nAdd items with the plus button.</string>
 </resources>
