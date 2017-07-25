@@ -4,10 +4,17 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.example.databasesample.model.Grocery;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +33,20 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        GroceryListAdapter groceryListAdapter = new GroceryListAdapter(getDummyData());
+
+        RecyclerView recyclerGrocery = (RecyclerView) findViewById(R.id.recycler_grocery);
+        recyclerGrocery.setLayoutManager(new LinearLayoutManager(this));
+        recyclerGrocery.setAdapter(groceryListAdapter);
+    }
+
+    private List<Grocery> getDummyData() {
+        List<Grocery> data = new ArrayList<>();
+        data.add(new Grocery("Sabun", 1, "biji", false));
+        data.add(new Grocery("Sampo", 3, "sachet", false));
+        data.add(new Grocery("Pasta Gigi", 2, "biji", true));
+        return data;
     }
 
     @Override
