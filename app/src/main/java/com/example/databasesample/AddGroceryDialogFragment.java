@@ -48,6 +48,7 @@ public class AddGroceryDialogFragment extends DialogFragment {
         spinnerUnit.setAdapter(adapter);
     }
 
+    @Override
     public void onResume() {
         // Store access variables for window and blank point
         Window window = getDialog().getWindow();
