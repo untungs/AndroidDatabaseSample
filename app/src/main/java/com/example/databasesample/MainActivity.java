@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.databasesample.model.Grocery;
 
@@ -31,6 +33,25 @@ public class MainActivity extends AppCompatActivity implements
 
     private DatabaseCompartment database;
     private GroceryListAdapter groceryListAdapter;
+    private ImageView imageEmptyList;
+    private TextView textEmptyList;
+
+    private RecyclerView.AdapterDataObserver dataObserver = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            refreshEmptyView();
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            refreshEmptyView();
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            refreshEmptyView();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        imageEmptyList = (ImageView) findViewById(R.id.image_empty_list);
+        textEmptyList = (TextView) findViewById(R.id.text_empty_list);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         groceryListAdapter = new GroceryListAdapter(Collections.<Grocery>emptyList(), this);
+        groceryListAdapter.registerAdapterDataObserver(dataObserver);
 
         RecyclerView recyclerGrocery = (RecyclerView) findViewById(R.id.recycler_grocery);
         recyclerGrocery.setLayoutManager(new LinearLayoutManager(this));
@@ -97,6 +121,18 @@ public class MainActivity extends AppCompatActivity implements
     public void onItemDeleted(Grocery grocery) {
         database.delete(grocery);
         groceryListAdapter.deleteGrocery(grocery);
+    }
+
+    private void refreshEmptyView() {
+        int visibility = groceryListAdapter.getItemCount() > 0 ? View.GONE : View.VISIBLE;
+        imageEmptyList.setVisibility(visibility);
+        textEmptyList.setVisibility(visibility);
+    }
+
+    @Override
+    protected void onDestroy() {
+        groceryListAdapter.unregisterAdapterDataObserver(dataObserver);
+        super.onDestroy();
     }
 
     @Override
