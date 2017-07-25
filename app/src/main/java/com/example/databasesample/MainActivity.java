@@ -25,7 +25,9 @@ import nl.qbusict.cupboard.QueryResultIterable;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class MainActivity extends AppCompatActivity implements AddGroceryDialogFragment.OnGroceryAddedListener {
+public class MainActivity extends AppCompatActivity implements
+        AddGroceryDialogFragment.OnGroceryAddedListener,
+        GroceryListAdapter.OnItemUpdatedListener {
 
     private DatabaseCompartment database;
     private GroceryListAdapter groceryListAdapter;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements AddGroceryDialogF
             }
         });
 
-        groceryListAdapter = new GroceryListAdapter(Collections.<Grocery>emptyList());
+        groceryListAdapter = new GroceryListAdapter(Collections.<Grocery>emptyList(), this);
 
         RecyclerView recyclerGrocery = (RecyclerView) findViewById(R.id.recycler_grocery);
         recyclerGrocery.setLayoutManager(new LinearLayoutManager(this));
@@ -84,6 +86,16 @@ public class MainActivity extends AppCompatActivity implements AddGroceryDialogF
         FragmentManager fragmentManager = getSupportFragmentManager();
         AddGroceryDialogFragment dialogFragment = new AddGroceryDialogFragment();
         dialogFragment.show(fragmentManager, "fragment_add_grocery");
+    }
+
+    @Override
+    public void onItemUpdated(Grocery grocery) {
+        database.put(grocery);
+    }
+
+    @Override
+    public void onItemDeleted(Grocery grocery) {
+
     }
 
     @Override
