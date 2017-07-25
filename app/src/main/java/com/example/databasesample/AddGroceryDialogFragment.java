@@ -30,7 +30,7 @@ public class AddGroceryDialogFragment extends DialogFragment {
     private Spinner spinnerUnit;
     private Button buttonAddItem;
 
-    private OnDialogDismissListener dialogDismissListener;
+    private OnGroceryAddedListener groceryAddedListener;
 
     public AddGroceryDialogFragment() {
     }
@@ -38,11 +38,11 @@ public class AddGroceryDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!(getActivity() instanceof OnDialogDismissListener)) {
+        if (!(getActivity() instanceof OnGroceryAddedListener)) {
             throw new IllegalStateException(getActivity().getClass().getSimpleName()
-                    + " must implement " + OnDialogDismissListener.class.getSimpleName());
+                    + " must implement " + OnGroceryAddedListener.class.getSimpleName());
         }
-        dialogDismissListener = (OnDialogDismissListener) getActivity();
+        groceryAddedListener = (OnGroceryAddedListener) getActivity();
     }
 
     @Nullable
@@ -93,7 +93,6 @@ public class AddGroceryDialogFragment extends DialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        dialogDismissListener.onDialogDismiss();
     }
 
     void addGrocery() {
@@ -102,11 +101,14 @@ public class AddGroceryDialogFragment extends DialogFragment {
         String unit = spinnerUnit.getSelectedItem().toString();
 
         SQLiteDatabase db = ((MyApp) getActivity().getApplication()).getDb();
-        long id = cupboard().withDatabase(db).put(new Grocery(itemName, amount, unit, false));
+        Grocery grocery = new Grocery(itemName, amount, unit, false);
+
+        long id = cupboard().withDatabase(db).put(grocery);
+        groceryAddedListener.onGroceryAdded(id);
         Log.d("DBTEST", String.valueOf(id));
     }
 
-    public interface OnDialogDismissListener {
-        void onDialogDismiss();
+    public interface OnGroceryAddedListener {
+        void onGroceryAdded(long id);
     }
 }

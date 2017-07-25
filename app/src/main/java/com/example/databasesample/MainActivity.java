@@ -19,12 +19,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import nl.qbusict.cupboard.DatabaseCompartment;
 import nl.qbusict.cupboard.QueryResultIterable;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class MainActivity extends AppCompatActivity implements AddGroceryDialogFragment.OnDialogDismissListener {
+public class MainActivity extends AppCompatActivity implements AddGroceryDialogFragment.OnGroceryAddedListener {
 
+    private DatabaseCompartment database;
     private GroceryListAdapter groceryListAdapter;
 
     @Override
@@ -48,17 +50,19 @@ public class MainActivity extends AppCompatActivity implements AddGroceryDialogF
         recyclerGrocery.setLayoutManager(new LinearLayoutManager(this));
         recyclerGrocery.setAdapter(groceryListAdapter);
 
-        showData();
+        SQLiteDatabase db = ((MyApp) getApplication()).getDb();
+        database = cupboard().withDatabase(db);
+
+        showAllGroceries();
     }
 
     @Override
-    public void onDialogDismiss() {
-        showData();
+    public void onGroceryAdded(long id) {
+        showNewGrocery(id);
     }
 
-    private void showData() {
-        SQLiteDatabase db = ((MyApp) getApplication()).getDb();
-        Cursor groceries = cupboard().withDatabase(db).query(Grocery.class).getCursor();
+    private void showAllGroceries() {
+        Cursor groceries = database.query(Grocery.class).getCursor();
         List<Grocery> data = new ArrayList<>();
         try {
             QueryResultIterable<Grocery> itr = cupboard().withCursor(groceries).iterate(Grocery.class);
@@ -67,6 +71,11 @@ public class MainActivity extends AppCompatActivity implements AddGroceryDialogF
             groceries.close();
         }
         groceryListAdapter.setGroceries(data);
+    }
+
+    private void showNewGrocery(long id) {
+        Grocery grocery = database.get(Grocery.class, id);
+        groceryListAdapter.addGrocery(grocery);
     }
 
     private void showAddGroceryDialog() {
