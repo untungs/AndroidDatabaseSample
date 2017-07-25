@@ -14,6 +14,7 @@
             android:id="@+id/input_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textCapSentences"
             android:hint="@string/item_name"/>
 
     </android.support.design.widget.TextInputLayout>
@@ -33,6 +34,7 @@
                 android:id="@+id/input_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="number"
                 android:hint="@string/amount"/>
 
         </android.support.design.widget.TextInputLayout>
