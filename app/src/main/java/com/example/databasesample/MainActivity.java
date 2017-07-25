@@ -2,7 +2,7 @@ package com.example.databasesample;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,8 +29,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                showAddGroceryDialog();
             }
         });
 
@@ -47,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
         data.add(new Grocery("Sampo", 3, "sachet", false));
         data.add(new Grocery("Pasta Gigi", 2, "biji", true));
         return data;
+    }
+
+    private void showAddGroceryDialog() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        AddGroceryDialogFragment dialogFragment = new AddGroceryDialogFragment();
+        dialogFragment.show(fragmentManager, "fragment_add_grocery");
     }
 
     @Override
