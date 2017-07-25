@@ -49,6 +49,12 @@ public class GroceryListAdapter extends RecyclerView.Adapter<GroceryListAdapter.
         notifyItemInserted(groceries.size() - 1);
     }
 
+    public void deleteGrocery(Grocery grocery) {
+        int position = this.groceries.indexOf(grocery);
+        this.groceries.remove(grocery);
+        notifyItemRemoved(position);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         private CheckBox checkboxBought;
         private TextView textItem;
@@ -68,6 +74,15 @@ public class GroceryListAdapter extends RecyclerView.Adapter<GroceryListAdapter.
                     if (grocery != null) {
                         grocery.bought = isChecked;
                         itemUpdatedListener.onItemUpdated(grocery);
+                    }
+                }
+            });
+
+            buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (grocery != null) {
+                        itemUpdatedListener.onItemDeleted(grocery);
                     }
                 }
             });

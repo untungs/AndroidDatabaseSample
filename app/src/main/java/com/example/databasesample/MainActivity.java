@@ -95,7 +95,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onItemDeleted(Grocery grocery) {
-
+        database.delete(grocery);
+        groceryListAdapter.deleteGrocery(grocery);
     }
 
     @Override
