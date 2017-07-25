@@ -16,6 +16,8 @@ import com.example.databasesample.model.Grocery;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.animators.OvershootInRightAnimator;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerGrocery = (RecyclerView) findViewById(R.id.recycler_grocery);
         recyclerGrocery.setLayoutManager(new LinearLayoutManager(this));
         recyclerGrocery.setAdapter(groceryListAdapter);
+        recyclerGrocery.setItemAnimator(new OvershootInRightAnimator());
     }
 
     private List<Grocery> getDummyData() {
