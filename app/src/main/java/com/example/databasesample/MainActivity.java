@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.animators.OvershootInRightAnimator;
 import nl.qbusict.cupboard.DatabaseCompartment;
 import nl.qbusict.cupboard.QueryResultIterable;
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements AddGroceryDialogF
         RecyclerView recyclerGrocery = (RecyclerView) findViewById(R.id.recycler_grocery);
         recyclerGrocery.setLayoutManager(new LinearLayoutManager(this));
         recyclerGrocery.setAdapter(groceryListAdapter);
+        recyclerGrocery.setItemAnimator(new OvershootInRightAnimator());
 
         SQLiteDatabase db = ((MyApp) getApplication()).getDb();
         database = cupboard().withDatabase(db);

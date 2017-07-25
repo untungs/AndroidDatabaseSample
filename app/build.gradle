@@ -30,5 +30,6 @@ dependencies {
     compile 'com.android.support:design:26.+'
     testCompile 'junit:junit:4.12'
 
+    compile 'jp.wasabeef:recyclerview-animators:2.2.7'
     compile 'nl.qbusict:cupboard:2.2.0'
 }
